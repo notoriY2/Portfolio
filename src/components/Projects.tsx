@@ -7,7 +7,7 @@ const projects = [
     description: 'Notorious Store is a modern e-commerce web application inspired by Y2 streetwear culture, designed to showcase and sell trend-driven fashion items.',
     tech: ['TypeScript ', 'CSS ', 'Other '],
     images: [
-      '../../images/9.png',
+      '../../images/11.png',
       '../../images/10.png'
     ],
     github: 'https://github.com/notoriY2/Notorious-Store',
