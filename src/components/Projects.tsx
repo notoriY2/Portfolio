@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ExternalLink, Github } from 'lucide-react';
 
 // Import local images so the bundler includes them in the production build
@@ -18,7 +18,7 @@ type Project = {
   title: string;
   description: string;
   tech: string[];
-  images: string[];
+  images: string[]; // imported image URLs
   github: string;
   live: string;
   type: string;
@@ -79,6 +79,16 @@ const projects: Project[] = [
 export default function Projects(): JSX.Element {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
+  // Preload second images to avoid any flicker on first hover
+  useEffect(() => {
+    projects.forEach((p) => {
+      if (p.images[1]) {
+        const preload = new Image();
+        preload.src = p.images[1];
+      }
+    });
+  }, []);
+
   const getProjectTypeBadge = (type: string) => {
     const colors: Record<string, string> = {
       Professional: 'bg-[#CE9635]/20 text-[#C04D30] border-[#CE9635]/40',
@@ -106,29 +116,38 @@ export default function Projects(): JSX.Element {
           {projects.map((project, index) => (
             <div
               key={index}
-              className="group bg-white rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-500 border border-[#CE9635]/20 hover:border-[#CE9635]/50"
+              className="group bg-white rounded-2xl overflow-hidden hover:shadow-2xl transition-shadow duration-150 border border-[#CE9635]/20 hover:border-[#CE9635]/50"
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
               <div className="relative h-56 overflow-hidden bg-[#CE9635]/20">
+                {/* Instant swap: no transition classes on the image */}
                 <img
                   src={hoveredIndex === index ? project.images[1] : project.images[0]}
                   alt={project.title}
                   loading="lazy"
-                  className="w-full h-full object-cover transition-all duration-500"
+                  className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                {/* Overlay opacity change is instant (no transition) */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-none"></div>
               </div>
 
               <div className="p-6">
                 <div className="flex items-start justify-between gap-3 mb-2">
-                  <h3 className="text-xl font-bold text-slate-900 group-hover:text-[#CE9635] transition-colors flex-1">
+                  {/* Title color change instantly (no transition) */}
+                  <h3 className="text-xl font-bold text-slate-900 group-hover:text-[#CE9635] transition-none flex-1">
                     {project.title}
                   </h3>
-                  <span className={`px-2 py-1 text-xs rounded-full border flex-shrink-0 ${getProjectTypeBadge(project.type)}`}>
+                  <span
+                    className={`px-2 py-1 text-xs rounded-full border flex-shrink-0 ${getProjectTypeBadge(
+                      project.type
+                    )}`}
+                  >
                     {project.type}
                   </span>
                 </div>
+
                 <p className="text-slate-600 mb-4 text-sm leading-relaxed">{project.description}</p>
 
                 <div className="flex flex-wrap gap-2 mb-5">
@@ -147,7 +166,7 @@ export default function Projects(): JSX.Element {
                     href={project.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-slate-600 hover:text-[#CE9635] transition-colors duration-300 font-medium"
+                    className="flex items-center gap-2 text-sm text-slate-600 hover:text-[#CE9635] transition-colors duration-150 font-medium"
                   >
                     <Github size={18} />
                     Code
@@ -156,7 +175,7 @@ export default function Projects(): JSX.Element {
                     href={project.live}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-slate-600 hover:text-[#CE9635] transition-colors duration-300 font-medium"
+                    className="flex items-center gap-2 text-sm text-slate-600 hover:text-[#CE9635] transition-colors duration-150 font-medium"
                   >
                     <ExternalLink size={18} />
                     Live Demo
