@@ -91,18 +91,19 @@ export default function Hero(): JSX.Element {
           }}
         >
           <div className="flex flex-col items-center text-center">
-            {/* compact logo badge — smaller & less saturated */}
-            <div
-              className="w-20 h-20 md:w-24 md:h-24 mb-6 rounded-full flex items-center justify-center font-bold text-lg md:text-2xl"
-              style={{
-                background: `linear-gradient(135deg, ${primary}22 0%, ${accent}18 100%)`,
-                color: '#fff',
-                boxShadow: '0 6px 18px rgba(12,18,26,0.06)',
-                border: '1px solid rgba(0,0,0,0.04)'
-              }}
-            >
-              MP
-            </div>
+  {/* Modern logo badge */}
+  <div
+    className="w-20 h-20 md:w-24 md:h-24 mb-6 rounded-full flex items-center justify-center font-bold text-xl md:text-2xl transition-all duration-300 hover:scale-105"
+    style={{
+      background: `linear-gradient(135deg, ${primary} 0%, ${accent} 100%)`,
+      color: '#ffffff',
+      boxShadow: '0 12px 30px rgba(0,0,0,0.15)',
+      border: '2px solid rgba(255,255,255,0.2)',
+      backdropFilter: 'blur(6px)'
+    }}
+  >
+    MP
+  </div>
 
             {/* Headline and subtitle use dark text — white is used for background majority */}
             <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight mb-4">
