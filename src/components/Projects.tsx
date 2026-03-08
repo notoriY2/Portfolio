@@ -1,0 +1,157 @@
+import { ExternalLink, Github } from 'lucide-react';
+import { useState } from 'react';
+
+const projects = [
+  {
+    title: 'Notorious Store [Static Website]',
+    description: 'Notorious Store is a modern e-commerce web application inspired by Y2 streetwear culture, designed to showcase and sell trend-driven fashion items.',
+    tech: ['TypeScript ', 'CSS ', 'Other '],
+    images: [
+      '../../images/9.png',
+      '../../images/10.png'
+    ],
+    github: 'https://github.com/notoriY2/Notorious-Store',
+    live: 'https://notorious-store.netlify.app/',
+    type: 'Personal'
+  },
+  {
+    title: 'Trackademy [Supabase backend]',
+    description: 'A comprehensive student academic performance and course management system designed for tertiary institutions. Track assessments, manage attendance, and automate exam eligibility with ease',
+    tech: ['TypeScript', 'PLpgSQL', 'Supabase', 'Other '],
+    images: [
+      '../../images/8.png',
+      '../../images/7.png'
+    ],
+    github: 'https://github.com/notoriY2/Trackademy',
+    live: 'https://trackademy-omega.vercel.app/',
+    type: 'Academic'
+  },
+  {
+    title: 'Buddy [mySQL backend]',
+    description: 'Buddy in a social media and student management system for university students',
+    tech: ['PHP ', 'JavaScript', 'CSS ', 'HTML '],
+    images: [
+      '../../images/6.png',
+      '../../images/5.png'
+    ],
+    github: 'https://github.com/notoriY2/Buddy',
+    live: 'https://buddysocials.page.gd/',
+    type: 'Academic'
+  },
+  {
+    title: 'CampusCare [mySQL database]',
+    description: 'Campus Care is your comprehensive solution for managing healthcare services on campus. Schedule appointments, track medical history, access health resources, and stay connected with healthcare providers—all in one place, for both students and staff.]',
+    tech: ['PHP ', 'CSS ', 'Other '],
+    images: [
+      '../../images/4.png',
+      '../../images/3.png'
+    ],
+    github: 'https://github.com/notoriY2/Campus-Care',
+    live: 'https://campus-care.page.gd/',
+    type: 'Academic'
+  },
+  {
+    title: 'SPU United [Static Website]',
+    description: 'SPU United is a website I did for the football club in my university, here you can see my work on HTML5 and CSS',
+    tech: ['HTML', 'CSS ', 'JavaScript '],
+    images: [
+      '../../images/2.png',
+      '../../images/1.png'
+    ],
+    github: 'https://github.com/notoriY2/SPU-United',
+    live: 'https://spu-united.netlify.app/',
+    type: 'Academic'
+  }
+];
+
+export default function Projects() {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  const getProjectTypeBadge = (type: string) => {
+    const colors: Record<string, string> = {
+      Professional: 'bg-[#CE9635]/20 text-[#C04D30] border-[#CE9635]/40',
+      Academic: 'bg-[#CE9635]/20 text-[#C04D30] border-[#CE9635]/40',
+      Personal: 'bg-[#CE9635]/20 text-[#C04D30] border-[#CE9635]/40',
+      Course: 'bg-[#CE9635]/20 text-[#C04D30] border-[#CE9635]/40'
+    };
+    return colors[type] || colors.Personal;
+  };
+
+  return (
+    <section id="projects" className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-6">
+        <h2 className="text-4xl font-bold mb-4 text-center bg-gradient-to-r from-[#CE9635] to-[#C04D30] bg-clip-text text-transparent">
+          Featured Projects
+        </h2>
+        <p className="text-slate-600 text-center mb-4 max-w-2xl mx-auto">
+          A collection of professional, academic, and personal projects showcasing my skills in modern web development
+        </p>
+        <p className="text-slate-500 text-center mb-12 max-w-2xl mx-auto text-sm">
+          View source code and live demos to see how each project was built
+        </p>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {projects.map((project, index) => (
+            <div
+              key={index}
+              className="group bg-white rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-500 border border-[#CE9635]/20 hover:border-[#CE9635]/50"
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+            >
+              <div className="relative h-56 overflow-hidden bg-[#CE9635]/20">
+                <img
+                  src={hoveredIndex === index ? project.images[1] : project.images[0]}
+                  alt={project.title}
+                  className="w-full h-full object-cover transition-all duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+
+              <div className="p-6">
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <h3 className="text-xl font-bold text-slate-900 group-hover:text-[#CE9635] transition-colors flex-1">
+                    {project.title}
+                  </h3>
+                  <span className={`px-2 py-1 text-xs rounded-full border flex-shrink-0 ${getProjectTypeBadge(project.type)}`}>
+                    {project.type}
+                  </span>
+                </div>
+                <p className="text-slate-600 mb-4 text-sm leading-relaxed">
+                  {project.description}
+                </p>
+
+                <div className="flex flex-wrap gap-2 mb-5">
+                  {project.tech.map((tech, techIndex) => (
+                    <span
+                      key={techIndex}
+                      className="px-3 py-1 bg-[#CE9635]/10 text-xs rounded-full text-slate-700 border border-[#CE9635]/20"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="flex gap-4 pt-4 border-t border-[#CE9635]/20">
+                  <a
+                    href={project.github}
+                    className="flex items-center gap-2 text-sm text-slate-600 hover:text-[#CE9635] transition-colors duration-300 font-medium"
+                  >
+                    <Github size={18} />
+                    Code
+                  </a>
+                  <a
+                    href={project.live}
+                    className="flex items-center gap-2 text-sm text-slate-600 hover:text-[#CE9635] transition-colors duration-300 font-medium"
+                  >
+                    <ExternalLink size={18} />
+                    Live Demo
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
