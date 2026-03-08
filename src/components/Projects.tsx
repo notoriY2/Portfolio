@@ -106,27 +106,23 @@ export default function Projects(): JSX.Element {
           {projects.map((project, index) => (
             <div
               key={index}
-              /* Removed transition duration so hover effects are instant */
-              className="group bg-white rounded-2xl overflow-hidden hover:shadow-2xl border border-[#CE9635]/20 hover:border-[#CE9635]/50 transition-none"
+              className="group bg-white rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-500 border border-[#CE9635]/20 hover:border-[#CE9635]/50"
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
               <div className="relative h-56 overflow-hidden bg-[#CE9635]/20">
                 <img
-                  /* image swap now happens instantly (no transition on the image) */
                   src={hoveredIndex === index ? project.images[1] : project.images[0]}
                   alt={project.title}
                   loading="lazy"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-all duration-500"
                 />
-                {/* overlay opacity now instant on hover */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-none"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
 
               <div className="p-6">
                 <div className="flex items-start justify-between gap-3 mb-2">
-                  {/* title color change on hover is instant now (no transition) */}
-                  <h3 className="text-xl font-bold text-slate-900 group-hover:text-[#CE9635] transition-none flex-1">
+                  <h3 className="text-xl font-bold text-slate-900 group-hover:text-[#CE9635] transition-colors flex-1">
                     {project.title}
                   </h3>
                   <span className={`px-2 py-1 text-xs rounded-full border flex-shrink-0 ${getProjectTypeBadge(project.type)}`}>
@@ -151,7 +147,7 @@ export default function Projects(): JSX.Element {
                     href={project.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-slate-600 hover:text-[#CE9635] transition-none font-medium"
+                    className="flex items-center gap-2 text-sm text-slate-600 hover:text-[#CE9635] transition-colors duration-300 font-medium"
                   >
                     <Github size={18} />
                     Code
@@ -160,7 +156,7 @@ export default function Projects(): JSX.Element {
                     href={project.live}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-slate-600 hover:text-[#CE9635] transition-none font-medium"
+                    className="flex items-center gap-2 text-sm text-slate-600 hover:text-[#CE9635] transition-colors duration-300 font-medium"
                   >
                     <ExternalLink size={18} />
                     Live Demo
