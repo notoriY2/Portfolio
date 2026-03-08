@@ -1,70 +1,81 @@
+import React, { useState } from 'react';
 import { ExternalLink, Github } from 'lucide-react';
-import { useState } from 'react';
 
-const projects = [
+// Import local images so the bundler includes them in the production build
+import img1 from '../../images/1.png';
+import img2 from '../../images/2.png';
+import img3 from '../../images/3.png';
+import img4 from '../../images/4.png';
+import img5 from '../../images/5.png';
+import img6 from '../../images/6.png';
+import img7 from '../../images/7.png';
+import img8 from '../../images/8.png';
+import img10 from '../../images/10.png';
+import img11 from '../../images/11.png';
+
+type Project = {
+  title: string;
+  description: string;
+  tech: string[];
+  images: string[];
+  github: string;
+  live: string;
+  type: string;
+};
+
+const projects: Project[] = [
   {
     title: 'Notorious Store [Static Website]',
-    description: 'Notorious Store is a modern e-commerce web application inspired by Y2 streetwear culture, designed to showcase and sell trend-driven fashion items.',
-    tech: ['TypeScript ', 'CSS ', 'Other '],
-    images: [
-      '../../images/11.png',
-      '../../images/10.png'
-    ],
+    description:
+      'Notorious Store is a modern e-commerce web application inspired by Y2 streetwear culture, designed to showcase and sell trend-driven fashion items.',
+    tech: ['TypeScript', 'CSS', 'Other'],
+    images: [img11, img10],
     github: 'https://github.com/notoriY2/Notorious-Store',
     live: 'https://notorious-store.netlify.app/',
     type: 'Personal'
   },
   {
     title: 'Trackademy [Supabase backend]',
-    description: 'A comprehensive student academic performance and course management system designed for tertiary institutions. Track assessments, manage attendance, and automate exam eligibility with ease',
-    tech: ['TypeScript', 'PLpgSQL', 'Supabase', 'Other '],
-    images: [
-      '../../images/8.png',
-      '../../images/7.png'
-    ],
+    description:
+      'A comprehensive student academic performance and course management system designed for tertiary institutions. Track assessments, manage attendance, and automate exam eligibility with ease.',
+    tech: ['TypeScript', 'PLpgSQL', 'Supabase', 'Other'],
+    images: [img8, img7],
     github: 'https://github.com/notoriY2/Trackademy',
     live: 'https://trackademy-omega.vercel.app/',
     type: 'Academic'
   },
   {
     title: 'Buddy [mySQL backend]',
-    description: 'Buddy in a social media and student management system for university students',
-    tech: ['PHP ', 'JavaScript', 'CSS ', 'HTML '],
-    images: [
-      '../../images/6.png',
-      '../../images/5.png'
-    ],
+    description: 'Buddy is a social media and student management system for university students.',
+    tech: ['PHP', 'JavaScript', 'CSS', 'HTML'],
+    images: [img6, img5],
     github: 'https://github.com/notoriY2/Buddy',
     live: 'https://buddysocials.page.gd/',
     type: 'Academic'
   },
   {
     title: 'CampusCare [mySQL database]',
-    description: 'Campus Care is your comprehensive solution for managing healthcare services on campus. Schedule appointments, track medical history, access health resources, and stay connected with healthcare providers—all in one place, for both students and staff.]',
-    tech: ['PHP ', 'CSS ', 'Other '],
-    images: [
-      '../../images/4.png',
-      'images/3.png'
-    ],
+    description:
+      'Campus Care is your comprehensive solution for managing healthcare services on campus. Schedule appointments, track medical history, access health resources, and stay connected with healthcare providers — all in one place for students and staff.',
+    tech: ['PHP', 'CSS', 'Other'],
+    images: [img4, img3],
     github: 'https://github.com/notoriY2/Campus-Care',
     live: 'https://campus-care.page.gd/',
     type: 'Academic'
   },
   {
     title: 'SPU United [Static Website]',
-    description: 'SPU United is a website I did for the football club in my university, here you can see my work on HTML5 and CSS',
-    tech: ['HTML', 'CSS ', 'JavaScript '],
-    images: [
-      '../../images/2.png',
-      '../../images/1.png'
-    ],
+    description:
+      'SPU United is a website I did for the football club in my university — here you can see my work on HTML5 and CSS.',
+    tech: ['HTML', 'CSS', 'JavaScript'],
+    images: [img2, img1],
     github: 'https://github.com/notoriY2/SPU-United',
     live: 'https://spu-united.netlify.app/',
     type: 'Academic'
   }
 ];
 
-export default function Projects() {
+export default function Projects(): JSX.Element {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const getProjectTypeBadge = (type: string) => {
@@ -102,6 +113,7 @@ export default function Projects() {
                 <img
                   src={hoveredIndex === index ? project.images[1] : project.images[0]}
                   alt={project.title}
+                  loading="lazy"
                   className="w-full h-full object-cover transition-all duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -116,9 +128,7 @@ export default function Projects() {
                     {project.type}
                   </span>
                 </div>
-                <p className="text-slate-600 mb-4 text-sm leading-relaxed">
-                  {project.description}
-                </p>
+                <p className="text-slate-600 mb-4 text-sm leading-relaxed">{project.description}</p>
 
                 <div className="flex flex-wrap gap-2 mb-5">
                   {project.tech.map((tech, techIndex) => (
@@ -134,6 +144,8 @@ export default function Projects() {
                 <div className="flex gap-4 pt-4 border-t border-[#CE9635]/20">
                   <a
                     href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center gap-2 text-sm text-slate-600 hover:text-[#CE9635] transition-colors duration-300 font-medium"
                   >
                     <Github size={18} />
@@ -141,6 +153,8 @@ export default function Projects() {
                   </a>
                   <a
                     href={project.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center gap-2 text-sm text-slate-600 hover:text-[#CE9635] transition-colors duration-300 font-medium"
                   >
                     <ExternalLink size={18} />
