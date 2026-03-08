@@ -108,8 +108,7 @@ export default function Hero(): JSX.Element {
               Software Developer
             </h1>
             <p className="max-w-2xl text-slate-700 text-base md:text-lg mb-6">
-              Recent graduate building modern, accessible web apps. I focus on clean interfaces,
-              reliable performance, and thoughtful UX.
+              Software developer focused on building modern, scalable web applications with clean interfaces, strong performance, and intuitive user experiences.
             </p>
 
             {/* CTAs */}
