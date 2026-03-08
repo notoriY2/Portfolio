@@ -44,7 +44,7 @@ const projects = [
     tech: ['PHP ', 'CSS ', 'Other '],
     images: [
       '../../images/4.png',
-      '../../images/3.png'
+      'images/3.png'
     ],
     github: 'https://github.com/notoriY2/Campus-Care',
     live: 'https://campus-care.page.gd/',
