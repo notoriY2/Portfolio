@@ -8,7 +8,13 @@ export default function Hero(): JSX.Element {
   useEffect(() => {
     const handleScroll = () => {
       const aboutSection = document.getElementById('about');
-      if (!aboutSection) return;
+      if (!aboutSection) {
+        // when there's no about section on-page, map scroll to 0..1 using viewport only
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? Math.min(1, window.scrollY / docHeight) : 0;
+        setScrollProgress(progress);
+        return;
+      }
 
       const rect = aboutSection.getBoundingClientRect();
       const windowHeight = window.innerHeight;
@@ -18,11 +24,10 @@ export default function Hero(): JSX.Element {
       if (rect.top < windowHeight) {
         progress = Math.min(1, (windowHeight - rect.top) / (windowHeight + sectionHeight));
       }
-
       setScrollProgress(progress);
     };
 
-    // run once to set initial state in case user opens mid-page
+    // run once to set initial state
     handleScroll();
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -35,125 +40,211 @@ export default function Hero(): JSX.Element {
     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
+  // Theme colors: primary (#CE9635) and accent (#C04D30)
+  const primary = '#CE9635';
+  const accent = '#C04D30';
+
+  // use scrollProgress to subtly fade the background image and accents
+  const bgOpacity = Math.max(0, 0.35 - scrollProgress * 0.35); // from 0.35 -> 0
+  const accentOpacity = Math.max(0.06, 0.18 - scrollProgress * 0.18); // subtle accent layer
+
   return (
-    <section
-      className="min-h-screen flex items-center justify-center relative overflow-hidden"
-      style={{
-        background: `linear-gradient(180deg, #CE9635 0%, #CE9635 ${100 - scrollProgress * 100}%, #FFFFFF ${100 - scrollProgress * 100 + 0.5}%, #FFFFFF 100%)`
-      }}
-    >
-      {/* Background image layer (local asset) */}
+    <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-white">
+      {/* decorative soft accent blobs (use sparingly to respect 30% / 10% distribution) */}
       <div
-        className="absolute inset-0 bg-cover bg-center"
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-24 -top-24 w-96 h-96 rounded-full blur-3xl"
+        style={{
+          background: `radial-gradient(circle at 20% 20%, ${primary} ${Math.round(accentOpacity * 100)}%, transparent 30%)`
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-28 top-32 w-72 h-72 rounded-full blur-2xl"
+        style={{
+          background: `radial-gradient(circle at 80% 80%, ${accent} ${Math.round(accentOpacity * 60)}%, transparent 35%)`
+        }}
+      />
+
+      {/* subtle decorative background image (muted and blurred so it doesn't dominate) */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-center bg-no-repeat bg-cover"
         style={{
           backgroundImage: `url('${bgImage}')`,
-          backgroundPosition: 'center',
-          opacity: 1 - scrollProgress,
-          transition: 'opacity 300ms linear'
+          opacity: bgOpacity,
+          filter: 'grayscale(80%) contrast(0.9) blur(3px) saturate(0.6)',
+          transform: `scale(${1 + scrollProgress * 0.02})`,
+          transition: 'opacity 300ms linear, transform 400ms linear, filter 300ms linear'
         }}
-        aria-hidden="true"
       />
 
-      {/* Gradient overlay */}
-      <div
-        className="absolute inset-0 animate-reveal-bg"
-        style={{
-          opacity: 1 - scrollProgress,
-          background: 'linear-gradient(135deg, #CE9635 0%, #C04D30 100%)',
-          transition: 'opacity 300ms linear'
-        }}
-        aria-hidden="true"
-      />
+      {/* main glass panel — keeps the majority white visual and improves readability */}
+      <div className="relative z-10 max-w-4xl mx-auto px-6 w-full">
+        <div
+          className="mx-auto rounded-2xl p-8 md:p-12 shadow-lg border"
+          style={{
+            background: 'rgba(255,255,255,0.88)',
+            backdropFilter: 'saturate(120%) blur(6px)',
+            borderColor: 'rgba(14, 20, 26, 0.04)'
+          }}
+        >
+          <div className="flex flex-col items-center text-center">
+            {/* compact logo badge — smaller & less saturated */}
+            <div
+              className="w-20 h-20 md:w-24 md:h-24 mb-6 rounded-full flex items-center justify-center font-bold text-lg md:text-2xl"
+              style={{
+                background: `linear-gradient(135deg, ${primary}22 0%, ${accent}18 100%)`,
+                color: '#fff',
+                boxShadow: '0 6px 18px rgba(12,18,26,0.06)',
+                border: '1px solid rgba(0,0,0,0.04)'
+              }}
+            >
+              MP
+            </div>
 
-      <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
-        <div className="mb-8 animate-fade-in">
-          <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#CE9635] to-[#C04D30] flex items-center justify-center text-4xl font-bold text-white shadow-2xl">
-            MP
+            {/* Headline and subtitle use dark text — white is used for background majority */}
+            <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight mb-4">
+              Software Developer
+            </h1>
+            <p className="max-w-2xl text-slate-700 text-base md:text-lg mb-6">
+              Recent graduate building modern, accessible web apps. I focus on clean interfaces,
+              reliable performance, and thoughtful UX.
+            </p>
+
+            {/* CTAs */}
+            <div className="flex flex-wrap items-center justify-center gap-4 mb-6">
+              <a
+                href="/resume.pdf"
+                download
+                className="inline-flex items-center gap-3 px-5 py-3 rounded-lg font-semibold text-sm"
+                style={{
+                  background: 'transparent',
+                  color: primary,
+                  border: `2px solid ${primary}`,
+                  transition: 'all 160ms ease'
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.background = primary)
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.background = 'transparent')
+                }
+              >
+                Download Resume
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{ color: '#fff' }}
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+              </a>
+
+              <button
+                onClick={() => scrollToSection('projects')}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
+                style={{
+                  background: primary,
+                  color: '#fff',
+                  border: `1px solid ${primary}`,
+                  transition: 'transform 150ms ease, box-shadow 150ms ease'
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = 'translateY(-2px)')
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = 'translateY(0px)')
+                }
+              >
+                View Projects
+              </button>
+            </div>
+
+            {/* social icons — muted by default, highlight on hover */}
+            <div className="flex items-center gap-5 mb-4">
+              <a
+                href="https://github.com/notoriY2"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GitHub"
+                title="GitHub"
+                className="p-2 rounded-md"
+                style={{ color: 'rgba(17,24,39,0.75)' }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = primary)
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = 'rgba(17,24,39,0.75)')
+                }
+              >
+                <Github size={22} />
+              </a>
+
+              <a
+                href="https://www.linkedin.com/in/mosa-potsane-b029b7214/"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="LinkedIn"
+                title="LinkedIn"
+                className="p-2 rounded-md"
+                style={{ color: 'rgba(17,24,39,0.75)' }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = primary)
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = 'rgba(17,24,39,0.75)')
+                }
+              >
+                <Linkedin size={22} />
+              </a>
+
+              <a
+                href="mailto:mosapotsane700@gmail.com"
+                aria-label="Email"
+                title="Email"
+                className="p-2 rounded-md"
+                style={{ color: 'rgba(17,24,39,0.75)' }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = primary)
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = 'rgba(17,24,39,0.75)')
+                }
+              >
+                <Mail size={22} />
+              </a>
+            </div>
+
+            {/* down arrow — subtle, fades as you scroll */}
+            <div
+              className="mt-2"
+              style={{
+                opacity: Math.max(0, 1 - scrollProgress * 1.2),
+                transition: 'opacity 200ms linear'
+              }}
+            >
+              <button
+                onClick={() => scrollToSection('about')}
+                aria-label="Scroll to about section"
+                className="flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-sm"
+                style={{ border: '1px solid rgba(12,18,26,0.06)' }}
+                title="Scroll to About"
+              >
+                <ArrowDown size={18} color="rgba(17,24,39,0.75)" />
+              </button>
+            </div>
           </div>
         </div>
-
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-slide-up text-white drop-shadow-lg">
-          Software Developer
-        </h1>
-
-        <p className="text-xl md:text-2xl text-slate-100 mb-8 animate-slide-up-delay drop-shadow-md">
-          Recent graduate passionate about building modern web applications
-        </p>
-
-        <div className="flex flex-wrap justify-center gap-6 mb-8 animate-fade-in-delay">
-          <a
-            href="https://github.com/notoriY2"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-white hover:text-[#CE9635] transition-colors duration-300 hover:scale-110 transform"
-            aria-label="GitHub Profile"
-            title="GitHub"
-          >
-            <Github size={28} />
-          </a>
-
-          <a
-            href="https://www.linkedin.com/in/mosa-potsane-b029b7214/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-white hover:text-[#CE9635] transition-colors duration-300 hover:scale-110 transform"
-            aria-label="LinkedIn Profile"
-            title="LinkedIn"
-          >
-            <Linkedin size={28} />
-          </a>
-
-          <a
-            href="mailto:mosapotsane700@gmail.com"
-            className="text-white hover:text-[#CE9635] transition-colors duration-300 hover:scale-110 transform"
-            aria-label="Email Contact"
-            title="Email"
-          >
-            <Mail size={28} />
-          </a>
-        </div>
-
-        <a
-          href="/resume.pdf"
-          download
-          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#CE9635] to-[#C04D30] text-white rounded-lg font-semibold hover:from-[#B88527] hover:to-[#A93F25] transition-all duration-300 shadow-lg hover:shadow-xl mb-12 animate-fade-in-delay"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" y1="15" x2="12" y2="3"></line>
-          </svg>
-          Download Resume
-        </a>
-      </div>
-
-      {/* ArrowDown — clickable, accessible, and fades as you scroll */}
-      <div
-        className="absolute left-1/2 transform -translate-x-1/2 bottom-8 z-20"
-        style={{
-          opacity: Math.max(0, 1 - scrollProgress * 1.2),
-          pointerEvents: scrollProgress > 0.95 ? 'none' : 'auto',
-          transition: 'opacity 200ms linear'
-        }}
-      >
-        <button
-          onClick={() => scrollToSection('about')}
-          aria-label="Scroll to about section"
-          className="flex items-center justify-center w-12 h-12 rounded-full bg-black/25 backdrop-blur-sm text-white hover:bg-black/30 transition transform hover:scale-110 shadow-lg focus:outline-none"
-          title="Scroll to About"
-        >
-          <ArrowDown size={20} />
-        </button>
       </div>
     </section>
   );
