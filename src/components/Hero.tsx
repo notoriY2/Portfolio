@@ -46,7 +46,7 @@ export default function Hero(): JSX.Element {
   const accentOpacity = Math.max(0.06, 0.18 - scrollProgress * 0.18);
 
   return (
-    <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-slate-50/50">
+    <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-slate-50/50 pt-24 md:pt-32 pb-12">
       {/* Dynamic Background Reveal Layer */}
       <div 
         className="absolute inset-0 z-0 animate-reveal-bg pointer-events-none"
