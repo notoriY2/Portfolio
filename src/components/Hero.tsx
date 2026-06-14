@@ -101,7 +101,7 @@ export default function Hero(): JSX.Element {
             {/* Status Badge */}
             <div className="mb-6 animate-fade-in flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/[0.03] border border-slate-900/[0.05] text-[11px] font-bold tracking-wider text-slate-600 uppercase">
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: primary }} />
-              Available for Projects
+              Available for Work
             </div>
 
             {/* Profile Initials Badge */}
